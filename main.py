@@ -29,14 +29,19 @@ class Graph:
         return Graph(v, e, typo)
     def DFS(self, v, use):
         use[v]=True
+        #print(use, v)
         for i in self._e[v]:
             if self._type=="veight":
-                pass
+                for i in self._e[v]:
+                    if use[i[0]] == False:
+                        self.DFS(i[0], use)
+                        return
             else:
                 for i in self._e[v]:
                     if use[i]==False:
-                        DFS(self, v, use)
+                        self.DFS(i, use)
                         return
+        return
     def visualize(self):
         pass
     @staticmethod
@@ -87,8 +92,29 @@ class Graph:
         for i in range(1, self._v+1):
             print(*self._e[i])
         return ""
-    def Deicstra(self):
-        e=self._e
+    def Deicstra(self, s, s1):
+        use=[False for i in range(self._v+1)]
+        d=[-1.0 for i in range(self._v+1)]
+        d[s]=0
+        for i in range(1, self._v+1):
+            corect_v=0
+            for v in range(1, self._v+1):
+                if (d[v]<d[corect_v] and d[v]>=0) or d[corect_v]==-1.0:
+                    if use[v]==False:
+                        corect_v=v
+            use[corect_v]=True
+            for e in self._e[corect_v]:
+                if d[corect_v]>=0 and d[e[0]]>=0:
+                    d[e[0]]=min(d[e[0]], d[corect_v]+e[1])
+                else:
+                    d[e[0]]=e[1]
+        #print(d)
+        return d[s1]
+    def test_func(self):
+        self.Deicstra(1, 3)
+        return
+
 if __name__=='__main__':
-    g=Graph.input_as_vertex_list("j", file="K_5.txt")
+    g=Graph.input_as_vertex_list("veight", file="good_graph.txt")
     print(g)
+    g.test_func()
