@@ -1,4 +1,5 @@
 import copy
+import drove
 import numpy as np
 from itertools import permutations
 import tkinter as tk
@@ -9,7 +10,7 @@ class Graph:
             self._v =copy.deepcopy(v._v)
             self._e = copy.deepcopy(v._e)
             self._n_e=copy.deepcopy(v._n_e)
-            self._type = copy.copy(v._type)
+            self.typo = copy.copy(v.typo)
         else:
             self._v = v
             self._e = copy.deepcopy(e)
@@ -17,8 +18,9 @@ class Graph:
             for i in e:
                 s+=len(i)
             self._n_e=s
-            self._type = copy.deepcopy(typo)
-    def graph_gen(self, vn, en, typo):
+            self.typo = copy.deepcopy(typo)
+    @staticmethod
+    def graph_gen(vn, en, typo):
         v=vn
         e=[]
         for i in range(vn+1):
@@ -39,7 +41,7 @@ class Graph:
         use[v]=True
         #print(use, v)
         for i in self._e[v]:
-            if self._type=="veight":
+            if self.typo=="veight":
                 for i in self._e[v]:
                     if use[i[0]] == False:
                         self.DFS(i[0], use)
@@ -50,8 +52,6 @@ class Graph:
                         self.DFS(i, use)
                         return
         return
-    def visualize(self):
-        pass
     @staticmethod
     def input_as_vertex_list(typo, file=None):
         if file!=None:
@@ -129,7 +129,7 @@ class Graph:
                 return False
         return True
     def search_shortest_way(self, s, f):
-        if self._type=='veight':
+        if self.typo=='veight':
             res=self.Deicstra(s, f)
             return res
         else:
