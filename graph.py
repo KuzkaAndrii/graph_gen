@@ -1,14 +1,22 @@
 import copy
+import numpy as np
+from itertools import permutations
+import tkinter as tk
 from random import randint, uniform
 class Graph:
     def __init__(self, v, e, typo):
         if isinstance(v, Graph):
             self._v =copy.deepcopy(v._v)
             self._e = copy.deepcopy(v._e)
+            self._n_e=copy.deepcopy(v._n_e)
             self._type = copy.copy(v._type)
         else:
             self._v = v
             self._e = copy.deepcopy(e)
+            s=0
+            for i in e:
+                s+=len(i)
+            self._n_e=s
             self._type = copy.deepcopy(typo)
     def graph_gen(self, vn, en, typo):
         v=vn
@@ -113,8 +121,19 @@ class Graph:
     def test_func(self):
         self.Deicstra(1, 3)
         return
+    def is_together(self):
+        use=[False for i in range(1, self._v+1)]
+        self.DFS(1, use)
+        for i in range(1, self._v):
+            if not use[i]:
+                return False
+        return True
+    def search_shortest_way(self, s, f):
+        if self._type=='veight':
+            res=self.Deicstra(s, f)
+            return res
+        else:
+            return False
 
 if __name__=='__main__':
-    g=Graph.input_as_vertex_list("veight", file="good_graph.txt")
-    print(g)
-    g.test_func()
+    print()
