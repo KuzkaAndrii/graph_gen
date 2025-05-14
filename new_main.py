@@ -35,7 +35,7 @@ class Interface:
         self.ent_short2.grid(row=r+1, column=2)
         return r+2
     def otherG_part(self, r):
-        self.but_is_t=tk.Button(self.root, text="Перевірка на зв'язність", width=30, height=3)
+        self.but_is_t=tk.Button(self.root, text="Перевірка на зв'язність", width=30, height=3, command=self.is_together)
         self.but_search=tk.Button(self.root, text="Шукати підграф", width=60)
         self.leb_searsh=tk.Label(self.root, text="Введіть файл з підграфом")
         self.ent_search=tk.Entry(self.root, width=20)
@@ -44,9 +44,17 @@ class Interface:
         self.but_search.grid(row=r, column=1, columnspan=2)
         self.leb_searsh.grid(row=r+1, column=1)
         self.ent_search.grid(row=r+1, column=2)
-        return r+2
+
+        self.but_clean=tk.Button(self.root, text="Стерти граф з полотна", width=30, command=self.clean)
+        self.but_cl_g=tk.Button(self.root, text="Стерти граф", width=30, command=self.clean_g)
+        self.but_vis=tk.Button(self.root, text="Візуалізувати", width=30, command=self.visualize)
+        self.but_clean.grid(row=r+2, column=0)
+        self.but_cl_g.grid(row=r+2, column=1)
+        self.but_vis.grid(row=r+2, column=2)
+
+        return r+3
     def gen_part(self, r):
-        self.but_gen=tk.Button(self.root, text="згенерувати граф", width=30, height=3)
+        self.but_gen=tk.Button(self.root, text="згенерувати граф", width=30, height=3, command=self.graph_gen)
         self.leb_gen1=tk.Label(self.root, text="число вершин")
         self.leb_gen2=tk.Label(self.root, text="число ребер")
         self.ent_gen1=tk.Entry(self.root)
@@ -60,10 +68,10 @@ class Interface:
         return r+2
     def comunic_part(self, r):
         self.leb_int_com=tk.Label(text="Рядок для комунікації:", width=30)
-        self.leb_com=tk.Label(text="", width=60)
+        self.leb_com=tk.Label(text="Ласкаво просимо", width=60)
 
         self.leb_int_com.grid(row=r, column=0)
-        self.leb_com.grid(row=r, column=1, rowspan=2)
+        self.leb_com.grid(row=r, column=1, columnspan=2)
 
         self.lis=tk.Listbox(self.root, selectmode="browse", height=3)
         self.lis.insert(tk.END, "graph")
@@ -103,7 +111,6 @@ class Interface:
             return False
 
     def import_graph(self):
-
         s = self.select()
         print(s)
         st=self.ent_import.get()
@@ -115,17 +122,18 @@ class Interface:
         try:
             self._g = Graph.input_as_vertex_list(s, file=st)
             self.graph_exist = True
+            self.visualize()
         except:
             return
 
     def is_together(self):
         if self._g.typo == "veight":
-            self.leb_com.configure(text="Для такого типу графа код невизначений")
+            self.leb_com.config(text="Для такого типу графа код невизначений")
         res = self._g.is_together()
         if res:
-            self.leb_com.configure(text="Граф зв'язний")
+            self.leb_com.config(text="Граф зв'язний")
         else:
-            self.leb_com.configure(text="Граф незв'язний")
+            self.leb_com.config(text="Граф незв'язний")
         return
 
     def graph_gen(self):
@@ -134,35 +142,75 @@ class Interface:
         else:
             self._g = Graph.graph_gen(int(self.ent_gen1.get()), int(self.ent_gen2.get()), typo=self.select())
             self.graph_exist = True
+            self.leb_com.configure(text="граф згенеровано")
+            self.visualize()
 
     def visualize(self):
         if not self.graph_exist:
-            com.configure(text="граф не існує")
+            self.leb_com.configure(text="граф не існує")
         else:
-            print(type(self._g._v))
             self._g.vertex_dict_x = np.random.rand(self._g._v + 1)
             self._g.vertex_dict_y = np.random.rand(self._g._v + 1)
-            print("OKK")
-            print(self._g.typo)
-            if self._g.typo == "veight":
-                print("1")
-            elif self._g.typo == "orgraph":
-                print("2")
-            else:
-                print("Ok")
-                self.subplot.plot(self._g.vertex_dict_x[1:], self._g.vertex_dict_y[1:], 'o', markersize=5, color='black')
-                self.canv.draw()
-                im_list=np.zeros((self._g._v+1, self._g._v+1))
-                for i in range(1, self._g._v+1):
+
+
+            self.subplot.plot(self._g.vertex_dict_x[1:], self._g.vertex_dict_y[1:], 'o', markersize=5, color='black')
+            self.canv.draw()
+            im_list=np.zeros((self._g._v+1, self._g._v+1))
+            if self._g.typo!="veight":
+                for i in range(1, self._g._v + 1):
                     for v in self._g._e[i]:
-                        if i>v and self._g.typo!="orgraph":
+                        if i > v and self._g.typo != "orgraph":
                             continue
-                        if v==i:
-                            drove.petl(self._g.vertex_dict_x[i], self._g.vertex_dict_y[i], im_list[i, i], self.subplot, self.canv)
-                            im_list[i][i]+=1
+                        if self._g.typo == "orgraph":
+                            if v == i:
+                                drove.petl_arr(self._g.vertex_dict_x[i], self._g.vertex_dict_y[i], im_list[i, i],
+                                               self.subplot,
+                                               self.canv)
+                                im_list[i][i] += 1
+                            else:
+                                drove.edge_arr(self._g.vertex_dict_x[i], self._g.vertex_dict_y[i],
+                                               self._g.vertex_dict_x[v],
+                                               self._g.vertex_dict_y[v], im_list[i, v], self.subplot, self.canv)
+                                im_list[i, v] += 1
                         else:
-                            drove.edge(self._g.vertex_dict_x[i], self._g.vertex_dict_y[i], self._g.vertex_dict_x[v], self._g.vertex_dict_y[v], im_list[i, v], self.subplot, self.canv)
-                            im_list[i, v]+=1
+                            if v == i:
+                                drove.petl(self._g.vertex_dict_x[i], self._g.vertex_dict_y[i], im_list[i, i],
+                                           self.subplot,
+                                           self.canv)
+                                im_list[i][i] += 1
+                            else:
+                                drove.edge(self._g.vertex_dict_x[i], self._g.vertex_dict_y[i], self._g.vertex_dict_x[v],
+                                           self._g.vertex_dict_y[v], im_list[i, v], self.subplot, self.canv)
+                                im_list[i, v] += 1
+            else:
+                for i in range(1, self._g._v + 1):
+
+                    for v, rest in self._g._e[i]:
+                        print(i, v)
+                        if i > v:
+                            continue
+                        if v == i:
+                            drove.petl(self._g.vertex_dict_x[i], self._g.vertex_dict_y[i], im_list[i, i],
+                                        self.subplot,
+                                        self.canv)
+                            im_list[i][i] += 1
+                        else:
+                            drove.edge(self._g.vertex_dict_x[i], self._g.vertex_dict_y[i],
+                                        self._g.vertex_dict_x[v],
+                                        self._g.vertex_dict_y[v], im_list[i, v], self.subplot, self.canv)
+                            im_list[i, v] += 1
+            print(self._g)
+            return
+    def clean(self):
+        self.subplot.cla()
+        self.canv.draw()
+        self.leb_com.configure(text="Граф стерто")
+        return
+    def clean_g(self):
+        self.clean()
+        self.graph_exist=False
+        self.leb_com.configure(text="Граф видалено")
+        return
 
 if __name__=="__main__":
     Int=Interface()

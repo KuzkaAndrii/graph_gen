@@ -32,10 +32,12 @@ class Graph:
             elif typo == "veight":
                 l=uniform(0.0001, 10)
                 e[a].append((b, l))
-                e[b].append((a, l))
+                if a!=b:
+                    e[b].append((a, l))
             else:
                 e[a].append(b)
-                e[b].append(a)
+                if a!=b:
+                    e[b].append(a)
         return Graph(v, e, typo)
     def DFS(self, v, use):
         use[v]=True
@@ -122,7 +124,7 @@ class Graph:
         self.Deicstra(1, 3)
         return
     def is_together(self):
-        use=[False for i in range(1, self._v+1)]
+        use=[False for i in range(0, self._v+1)]
         self.DFS(1, use)
         for i in range(1, self._v):
             if not use[i]:
