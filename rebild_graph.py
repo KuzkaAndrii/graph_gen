@@ -1,6 +1,6 @@
 import copy
-import random
 from random import uniform, randint
+from itertools import permutations
 
 import numpy as np
 
@@ -214,11 +214,50 @@ class Graph(MetaGraph):
         return result_graph
 
 
+    def has_subgraph(self, g):
+        if g.type != self.type:
+            return False
+        if len(g.list_v)>len(self.list_v):
+            return False
+        if len(g.list_e)>len(self.list_e):
+            return False
+
+        self_matr = self.get_inc_matr()
+        g_matr = g.get_inc_matr()
+
+        el = list(range(self_matr[:, 0].size))
+        vl = list(range(self_matr[0].size))
+        for ind_e in permutations(el):
+            for ind_v in permutations(vl):
+                np_ind_e = np.array(ind_e)
+                np_ind_v = np.array(ind_v)
+
+                new_matr = self_matr[np_ind_e]
+                new_matr = new_matr[np.array(range(len(g.list_e)))]
+                new_matr = new_matr.T
+                new_matr = new_matr[np_ind_v]
+                new_matr = new_matr[np.array(range(len(g.list_v)))]
+                new_matr = new_matr.T
+                try:
+                    #print(type(new_matr), type(g_matr))
+                    A=np.array(new_matr)
+                    B=np.array(g_matr)
+                    #print(A)
+                    #print(B)
+                    #print('-----------------')
+                    res = np.array_equal(A, B)
+
+                    if res:
+                        return True
+                except:
+                    print(type(new_matr), type(g_matr))
+        return False
+
+
     @staticmethod
     def gen_graph(nv, ne, type_):
-        list_v=[]
-        list_e=[]
-        list_of_edge=[]
+        list_v = []
+        list_e = []
         for i in range(nv):
             list_v.append(Vertex(i+1))
         for i in range(ne):
@@ -236,8 +275,7 @@ class Graph(MetaGraph):
 
 
 if __name__=="__main__":
-    g=Graph.input_graph('bad_graph_1.txt')
-    g.print_graph()
-    print()
-    d, res=g.Dijkstra(1, 3)
-    print(d, res)
+    g = Graph.input_graph('C_4.txt')
+    h = Graph.input_graph('K_3.txt')
+
+    print(g.has_subgraph(h))

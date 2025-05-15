@@ -70,7 +70,7 @@ class Interface:
         return r+2
     def otherG_part(self, r):
         self.but_is_t=tk.Button(self.root, text="Перевірка на зв'язність", width=30, height=3, command=self.is_together)
-        self.but_search=tk.Button(self.root, text="Шукати підграф", width=60)
+        self.but_search=tk.Button(self.root, text="Шукати підграф", width=60, command=self.check_subgraph)
         self.leb_searsh=tk.Label(self.root, text="Введіть файл з підграфом")
         self.ent_search=tk.Entry(self.root, width=20)
 
@@ -80,6 +80,7 @@ class Interface:
         self.ent_search.grid(row=r+1, column=2)
 
         return r+2
+
     def gen_part(self, r):
         self.but_gen=tk.Button(self.root, text="згенерувати граф", width=30, height=3, command=self.graph_gen)
         self.leb_gen1=tk.Label(self.root, text="число вершин")
@@ -94,6 +95,19 @@ class Interface:
         self.ent_gen2.grid(row=r+1, column=2)
         return r+2
 
+
+    def save_part(self, r):
+        self.but_save = tk.Button(self.root, text="зберегти граф", width=30, command=self.safe)
+        self.leb_save = tk.Label(self.root, text='Текстовий файл для зберігання:')
+        self.ent_save = tk.Entry(self.root)
+
+        self.but_save.grid(row=r, column=0)
+        self.leb_save.grid(row=r, column=1)
+        self.ent_save.grid(row=r, column=2)
+
+        return r+1
+
+
     def show(self):
         i=1
         i=self.comunic_part(i)
@@ -102,6 +116,7 @@ class Interface:
         i=self.visualize_part(i)
         i=self.short_way_part(i)
         i=self.otherG_part(i)
+        i=self.save_part(i)
         self.root.mainloop()
         return
 
@@ -151,9 +166,7 @@ class Interface:
 
             for i in range(1, nv + 1):
                 for v in self._g._edge_list[i]:
-                    print(self._g.type)
                     if self._g.type != 'orgraph':
-                        print('Not Ok')
                         if i > v:
                             continue
                         if v == i:
@@ -170,15 +183,35 @@ class Interface:
                             drawe.edge_arr(self._g._v_x[i], self._g._v_y[i], self._g._v_x[v], self._g._v_y[v], im_list[i, v], self.subplot, self.canv)
                             im_list[i, v] += 1
         return
+
+
     def clean(self):
         self.subplot.cla()
         self.canv.draw()
         self.leb_com.configure(text="Граф стерто")
         return
+
+
     def clean_g(self):
         self.clean()
         self.graph_exist=False
         self.leb_com.configure(text="Граф видалено")
+        return
+
+
+    def safe(self):
+        way = self.ent_save.get()
+        self._g.print_graph(way=way)
+        self.leb_com.configure(text='Граф збережено')
+        return
+
+    def check_subgraph(self):
+        way=self.ent_search.get()
+        h=Graph.input_graph(way)
+        if self._g.has_subgraph(h):
+            self.leb_com.configure(text="Є підграфом")
+        else:
+            self.leb_com.configure(text="Не є підграфом")
         return
 
 if __name__=="__main__":
