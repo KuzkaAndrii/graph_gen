@@ -32,7 +32,7 @@ class Interface:
         self.lis = tk.Listbox(self.root, selectmode="browse", height=3)
         self.lis.insert(tk.END, "graph")
         self.lis.insert(tk.END, "orgraph")
-        self.lis.insert(tk.END, "veight")
+        self.lis.insert(tk.END, "weight")
         self.leb_lis = tk.Label(self.root, text="введіть тип графу, який буде згенерований")
         self.leb_lis.grid(row=r + 1, column=0, columnspan=1)
         self.lis.grid(row=r + 1, column=1)
@@ -219,6 +219,9 @@ class Interface:
         fn = int(self.ent_short2.get())
 
         d, way = self._g.Dijkstra(st, fn)
+        if d == None:
+            self.leb_com.configure(text='Нема шляху між даними ребрами')
+            return
         print(d, way)
         vert=way[0::2]
         edges=way[1::2]
@@ -228,13 +231,15 @@ class Interface:
 
         for v, num in edges:
             i=0
-            while self._g._edge_list[i] != self._g._edge_list[v]:
-                n = num - i
-                x1 = self._g._v_x[self._g._dedge_list[v][num]._s]
-                y1 = self._g._v_y[self._g._dedge_list[v][num]._s]
-                x2 = self._g._v_x[self._g._dedge_list[v][num]._f]
-                y2 = self._g._v_y[self._g._dedge_list[v][num]._f]
-                drawe.edge(x1, y1, x2, y2, n, self.subplot, self.canv, col='red')
+            while self._g._edge_list[v][i] != self._g._edge_list[v][num]:
+                i+=1
+            n = num - i
+            x1 = self._g._v_x[self._g._dedge_list[v][num]._s]
+            y1 = self._g._v_y[self._g._dedge_list[v][num]._s]
+            x2 = self._g._v_x[self._g._dedge_list[v][num]._f]
+            y2 = self._g._v_y[self._g._dedge_list[v][num]._f]
+            drawe.edge(x1, y1, x2, y2, n, self.subplot, self.canv, col='red')
+
 
 if __name__=="__main__":
     Int=Interface()

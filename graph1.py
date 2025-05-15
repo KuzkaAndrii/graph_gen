@@ -158,6 +158,9 @@ class Graph(MetaGraph):
                     ways[self._edge_list[corect_v][i]]=copy.deepcopy(ways[corect_v])
                     ways[self._edge_list[corect_v][i]].append((corect_v, i))
                     ways[self._edge_list[corect_v][i]].append(self._edge_list[corect_v][i])
+        if d[f] == self._gen_weight:
+            d[f] = None
+            ways[f] = None
         return d[f], ways.get(f)
 
 
@@ -264,8 +267,8 @@ class Graph(MetaGraph):
             st = randint(1, nv)
             fn = randint(1, nv)
             weight = 1
-            if type_=='weight':
-                weight=uniform(0.0, 100.0)
+            if type_ == 'weight':
+                weight = uniform(0.0, 100.0)
             e = Edge(st, fn, w=weight)
             list_e.append(e)
         result_graph = Graph(list_v, list_e, type_)
