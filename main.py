@@ -6,7 +6,7 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 import drawe
-from rebild_graph import Graph
+from graph1 import Graph
 
 
 class Interface:
@@ -56,7 +56,7 @@ class Interface:
         return r+1
 
     def short_way_part(self, r):
-        self.but_short=tk.Button(self.root, text="Пошук найкоротшого шляху", width=30, height=3)
+        self.but_short=tk.Button(self.root, text="Пошук найкоротшого шляху", width=30, height=3, command=self.highlight_way)
         self.leb_short1=tk.Label(self.root, text="Від", width=10)
         self.leb_short2=tk.Label(self.root, text="до", width=10)
         self.ent_short1=tk.Entry(self.root, width=20)
@@ -213,6 +213,28 @@ class Interface:
         else:
             self.leb_com.configure(text="Не є підграфом")
         return
+
+    def highlight_way(self):
+        st = int(self.ent_short1.get())
+        fn = int(self.ent_short2.get())
+
+        d, way = self._g.Dijkstra(st, fn)
+        print(d, way)
+        vert=way[0::2]
+        edges=way[1::2]
+
+        self.subplot.plot(self._g._v_x[vert], self._g._v_y[vert], 'o', markersize=5, color='red')
+        self.canv.draw()
+
+        for v, num in edges:
+            i=0
+            while self._g._edge_list[i] != self._g._edge_list[v]:
+                n = num - i
+                x1 = self._g._v_x[self._g._dedge_list[v][num]._s]
+                y1 = self._g._v_y[self._g._dedge_list[v][num]._s]
+                x2 = self._g._v_x[self._g._dedge_list[v][num]._f]
+                y2 = self._g._v_y[self._g._dedge_list[v][num]._f]
+                drawe.edge(x1, y1, x2, y2, n, self.subplot, self.canv, col='red')
 
 if __name__=="__main__":
     Int=Interface()

@@ -20,13 +20,13 @@ def petl(x, y, n, draw_1, draw_2):
     draw_1.plot(lx, ly, color='black')
     draw_2.draw()
     return
-def edge(x1, y1, x2, y2, n, draw_1, draw_2):
+def edge(x1, y1, x2, y2, n, draw_1, draw_2, col='black'):
     v1, v2 = norm(x1, y1, x2, y2)
     x, y=(x1+x2)/2+v1*n, (y1+y2)/2+v2*n
 
-    draw_1.plot(np.linspace(x1, x, 100), np.linspace(y1, y, 100), color='black')
+    draw_1.plot(np.linspace(x1, x, 100), np.linspace(y1, y, 100), color=col)
     draw_2.draw()
-    draw_1.plot(np.linspace(x, x2, 100), np.linspace(y, y2, 100),  color='black')
+    draw_1.plot(np.linspace(x, x2, 100), np.linspace(y, y2, 100),  color=col)
     draw_2.draw()
     return
 def edge_arr(x1, y1, x2, y2, n, draw_1, draw_2):

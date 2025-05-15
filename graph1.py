@@ -156,7 +156,7 @@ class Graph(MetaGraph):
                 if d[self._edge_list[corect_v][i]]>=d[corect_v] + self._weight_list[corect_v][i]:
                     d[self._edge_list[corect_v][i]]=d[corect_v] + self._weight_list[corect_v][i]
                     ways[self._edge_list[corect_v][i]]=copy.deepcopy(ways[corect_v])
-                    ways[self._edge_list[corect_v][i]].append(self._dedge_list[corect_v][i])
+                    ways[self._edge_list[corect_v][i]].append((corect_v, i))
                     ways[self._edge_list[corect_v][i]].append(self._edge_list[corect_v][i])
         return d[f], ways.get(f)
 
@@ -275,7 +275,7 @@ class Graph(MetaGraph):
 
 
 if __name__=="__main__":
-    g = Graph.input_graph('C_4.txt')
-    h = Graph.input_graph('K_3.txt')
+    g = Graph.input_graph('good_graph.txt')
+    d, way=g.Dijkstra(1, 4)
 
-    print(g.has_subgraph(h))
+    print(way)
