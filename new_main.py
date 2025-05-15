@@ -1,7 +1,7 @@
 import copy
 import tkinter as tk
 
-import drove
+import drawe
 from graph import Graph
 import random
 import numpy as np

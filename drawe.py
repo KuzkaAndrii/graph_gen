@@ -35,7 +35,7 @@ def edge_arr(x1, y1, x2, y2, n, draw_1, draw_2):
 
     draw_1.plot(np.linspace(x1, x, 100), np.linspace(y1, y, 100), color='black')
     draw_2.draw()
-    draw_1.arrow(x, y, x2-x, y2-y, color='black', fc='black', ec='black', head_width=0.02, head_length=0.02, length_includes_head=True)
+    draw_1.arrow(x, y, x2-x, y2-y, color='black', fc='black', ec='black', head_width=0.5, head_length=0.5, length_includes_head=True)
     draw_2.draw()
     return
 def petl_arr(x, y, n, draw_1, draw_2):
@@ -48,7 +48,7 @@ def petl_arr(x, y, n, draw_1, draw_2):
     lx[2], ly[2] = x, y
 
     draw_1.plot(lx, ly, color='black')
-    draw_1.arrow(lx[1], ly[1], lx[2]-lx[1], ly[2]-ly[1], color='black', fc='black', ec='black', head_width=0.02, head_length=0.02, length_includes_head=True)
+    draw_1.arrow(lx[1], ly[1], lx[2]-lx[1], ly[2]-ly[1], color='black', fc='black', ec='black', head_width=0.5, head_length=0.5, length_includes_head=True)
     draw_2.draw()
     return
 if __name__=="__main__":
