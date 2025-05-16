@@ -1,10 +1,12 @@
-import copy
+#стандартні бібліотеки
 import tkinter as tk
 
+#завантажені бібліотеки
 import numpy as np
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
+#власні бібліотеки
 import drawe
 from graph1 import Graph
 
@@ -14,6 +16,8 @@ class Interface:
         self.root=tk.Tk()
         self.graph_exist = False
         self._g = None
+
+    #частина інтерфейсу що в основному відповідає за ввід графу з файла
     def import_part(self, r):
         self.but_import = tk.Button(self.root, text="ввести граф", width=30, command=self.import_graph)
         self.ent_import = tk.Entry(self.root, width=20)
@@ -23,6 +27,8 @@ class Interface:
         self.ent_import.grid(row=r, column=2)
         return r+1
 
+
+    # частина інтерфейсу що в основному відповідає за комунікацію
     def comunic_part(self, r):
         self.leb_int_com = tk.Label(text="Рядок для комунікації:", width=30)
         self.leb_com = tk.Label(text="Ласкаво просимо", width=60)
@@ -39,6 +45,7 @@ class Interface:
         return r + 3
 
 
+    #частина інтерфейсу що в основному відповідає за візуалізацію
     def visualize_part(self, r):
         self.fig = Figure(figsize=(6, 4), dpi=100)
         self.subplot = self.fig.add_subplot(111)
@@ -55,6 +62,8 @@ class Interface:
         self.but_vis.grid(row=r, column=2)
         return r+1
 
+
+    #частина інтерфейсу що в основному відповідає за пошук найкоротшого шляху
     def short_way_part(self, r):
         self.but_short=tk.Button(self.root, text="Пошук найкоротшого шляху", width=30, height=3, command=self.highlight_way)
         self.leb_short1=tk.Label(self.root, text="Від", width=10)
@@ -68,6 +77,9 @@ class Interface:
         self.leb_short2.grid(row=r+1, column=1)
         self.ent_short2.grid(row=r+1, column=2)
         return r+2
+
+
+    # частина інтерфейсу що в основному відповідає за решту
     def otherG_part(self, r):
         self.but_is_t=tk.Button(self.root, text="Перевірка на зв'язність", width=30, height=3, command=self.is_together)
         self.but_search=tk.Button(self.root, text="Шукати підграф", width=60, command=self.check_subgraph)
@@ -81,6 +93,8 @@ class Interface:
 
         return r+2
 
+
+    # частина інтерфейсу що в основному відповідає за генерацію графа
     def gen_part(self, r):
         self.but_gen=tk.Button(self.root, text="згенерувати граф", width=30, height=3, command=self.graph_gen)
         self.leb_gen1=tk.Label(self.root, text="число вершин")
@@ -95,7 +109,7 @@ class Interface:
         self.ent_gen2.grid(row=r+1, column=2)
         return r+2
 
-
+    # частина інтерфейсу що в основному відповідає за збереження графа
     def save_part(self, r):
         self.but_save = tk.Button(self.root, text="зберегти граф", width=30, command=self.safe)
         self.leb_save = tk.Label(self.root, text='Текстовий файл для зберігання:')
@@ -107,7 +121,7 @@ class Interface:
 
         return r+1
 
-
+    # виклад віджетів
     def show(self):
         i=1
         i=self.comunic_part(i)
@@ -120,6 +134,7 @@ class Interface:
         self.root.mainloop()
         return
 
+    # вводить дані про тип графу зі списку
     def select(self):
         s_i = self.lis.curselection()
         if s_i:
@@ -128,6 +143,8 @@ class Interface:
         else:
             return False
 
+
+    # функця перевірки на зв'язність для віджета
     def is_together(self):
         res = self._g.is_together()
         if res:
@@ -137,6 +154,7 @@ class Interface:
         return
 
 
+    # функця вводу графа для віджета
     def import_graph(self):
         st=self.ent_import.get()
         if self.graph_exist:
@@ -146,6 +164,9 @@ class Interface:
             self.graph_exist = True
             self.visualize()
         return
+
+
+    # функця генерації графа для віджета
     def graph_gen(self):
         if self.graph_exist:
             self.leb_com.configure(text="граф вже існує")
@@ -155,6 +176,8 @@ class Interface:
             self.leb_com.configure(text="граф згенеровано")
             self.visualize()
 
+
+    # функця візуалізації графа
     def visualize(self):
         if not self.graph_exist:
             self.leb_com.configure(text="граф не існує")
@@ -185,6 +208,7 @@ class Interface:
         return
 
 
+    # функця видалення візуалізації графа для віджета
     def clean(self):
         self.subplot.cla()
         self.canv.draw()
@@ -192,6 +216,7 @@ class Interface:
         return
 
 
+    # функця видалення графа для віджета
     def clean_g(self):
         self.clean()
         self.graph_exist=False
@@ -199,12 +224,15 @@ class Interface:
         return
 
 
+    # функця збереження графа для віджета
     def safe(self):
         way = self.ent_save.get()
         self._g.print_graph(way=way)
         self.leb_com.configure(text='Граф збережено')
         return
 
+
+    # функця переходу на підграф для віджета
     def check_subgraph(self):
         way=self.ent_search.get()
         h=Graph.input_graph(way)
@@ -214,6 +242,8 @@ class Interface:
             self.leb_com.configure(text="Не є підграфом")
         return
 
+
+    # функця пошуку найкоротшого шляху для віджета
     def highlight_way(self):
         st = int(self.ent_short1.get())
         fn = int(self.ent_short2.get())
@@ -239,8 +269,6 @@ class Interface:
             x2 = self._g._v_x[self._g._dedge_list[v][num]._f]
             y2 = self._g._v_y[self._g._dedge_list[v][num]._f]
             drawe.edge(x1, y1, x2, y2, n, self.subplot, self.canv, col='red')
-
-
 if __name__=="__main__":
     Int=Interface()
     Int.show()

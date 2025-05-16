@@ -1,7 +1,9 @@
+#Стандартні бібліотеки
 import copy
 from random import uniform, randint
 from itertools import permutations
 
+#Завантажені бібліотеки
 import numpy as np
 
 
@@ -16,10 +18,10 @@ class Edge:
     def __init__(self, s, f, w=1):
         self._s = s
         self._f = f
-        self._w = w #weight of edge
+        self._w = w #маса ребра
         self._char = None
 
-
+#Допоміжний клас для графа
 class MetaGraph:
     def __init__(self, list_v, list_e, _type):
 
@@ -272,9 +274,6 @@ class Graph(MetaGraph):
             list_e.append(e)
         result_graph = Graph(list_v, list_e, type_)
         return result_graph
-
-
-
 
 if __name__=="__main__":
     g = Graph.input_graph(r'C:\Users\Person\graph_gen\tests\graphs\C_4.txt')
