@@ -1,0 +1,8 @@
+bad_graph_1.txt
+bad_graph_2.txt
+C_4.txt
+good_graph.txt
+K_2.txt
+K_3.txt
+K_5.txt
+ort.txt

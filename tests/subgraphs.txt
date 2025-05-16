@@ -1,0 +1,6 @@
+K_3.txt K_2.txt True
+K_5.txt K_3.txt True
+K_5.txt K_2.txt True
+C_4.txt K_3.txt False
+K_3.txt ort.txt False
+K_2.txt K_3.txt False

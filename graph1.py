@@ -90,7 +90,7 @@ class MetaGraph:
     def __get_gen_weight(self, list_e):
         res = 2
         for e in list_e:
-            res = max(e._w+1, res)
+            res += e._w
         return res
 
 
@@ -129,7 +129,6 @@ class Graph(MetaGraph):
 
     def DFS(self, v, use):
         use[v] = True
-        print(use)
         for i in self._edge_list[v]:
             for i in self._edge_list[v]:
                 if use[i] == False:
@@ -278,7 +277,6 @@ class Graph(MetaGraph):
 
 
 if __name__=="__main__":
-    g = Graph.input_graph('good_graph.txt')
-    d, way=g.Dijkstra(1, 4)
-
-    print(way)
+    g = Graph.input_graph(r'C:\Users\Person\graph_gen\tests\graphs\C_4.txt')
+    h = Graph.input_graph(r'C:\Users\Person\graph_gen\tests\graphs\K_3.txt')
+    print(g.has_subgraph(h))

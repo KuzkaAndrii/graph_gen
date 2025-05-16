@@ -1,0 +1,2 @@
+bad_graph_1.txt 1 3 3
+good_graph.txt 1 4 3
